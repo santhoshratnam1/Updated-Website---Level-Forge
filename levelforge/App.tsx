@@ -402,11 +402,12 @@ const App: React.FC = () => {
   const hasResult = Boolean(portfolioBlocks || comparisonResult || timelineResult);
 
   return (
-    <div className="min-h-screen w-full bg-[#0a0a0f] text-gray-200 overflow-hidden relative">
+    <div className="min-h-screen w-full bg-[#050505] text-gray-200 overflow-hidden relative">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-purple-600/30 rounded-full filter blur-3xl animate-blob"></div>
-        <div className="absolute top-[10%] right-[-10%] w-[600px] h-[600px] bg-cyan-600/30 rounded-full filter blur-3xl animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-[-20%] left-[20%] w-[400px] h-[400px] bg-blue-600/30 rounded-full filter blur-3xl animate-blob animation-delay-4000"></div>
+        {/* Warm Gold/Amber Background Blobs */}
+        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-orange-600/10 rounded-full filter blur-[100px] animate-blob"></div>
+        <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-amber-600/10 rounded-full filter blur-[100px] animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] bg-yellow-700/10 rounded-full filter blur-[100px] animate-blob animation-delay-4000"></div>
       </div>
 
       <Header 
@@ -417,14 +418,14 @@ const App: React.FC = () => {
         onHelpClick={() => setIsHelpPanelOpen(true)}
       />
 
-      <main className="relative z-10 pt-20 flex flex-col items-center justify-center min-h-screen p-4 md:p-8">
+      <main className="relative z-10 pt-24 flex flex-col items-center justify-center min-h-screen p-4 md:p-8">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center flex-grow">
             <LoadingSpinner message={loadingMessage} progress={progress} />
           </div>
         ) : error ? (
            <div className="flex flex-col items-center justify-center flex-grow text-center">
-            <div className="p-8 bg-red-500/10 border border-red-500/30 rounded-2xl max-w-md">
+            <div className="p-8 bg-red-500/10 border border-red-500/30 rounded-2xl max-w-md backdrop-blur-md">
               <h2 className="text-xl font-semibold text-red-400 mb-2">An Error Occurred</h2>
               <p className="text-red-300 text-sm mb-6">{error}</p>
               <Button onClick={resetState} variant="secondary">

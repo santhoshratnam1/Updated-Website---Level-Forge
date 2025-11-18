@@ -65,86 +65,113 @@ export const UploadForm: React.FC<UploadFormProps> = ({
     : (files.length === 1);
 
   return (
-    <div className="flex flex-col items-center w-full max-w-6xl mx-auto space-y-12">
-      <div className="relative w-full max-w-2xl mx-auto flex flex-col items-center justify-center">
-        {/* Animated gradient background */}
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-          <div className="absolute top-0 -right-4 w-72 h-72 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+    <div className="flex flex-col items-center w-full max-w-6xl mx-auto space-y-20">
+      
+      {/* Hero Section */}
+      <div className="relative w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center pt-10">
+        <div className="mb-6 flex items-center justify-center space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 backdrop-blur-sm">
+           <Icon name="logo" className="w-4 h-4 text-amber-400" />
+           <span className="text-xs font-semibold text-amber-200 uppercase tracking-wider">Advanced Level Analysis</span>
         </div>
 
-        <GlassCard className="relative overflow-hidden w-full">
+        <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-tight">
+          <span className="text-white">Revolutionize Your</span><br/>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-400 to-amber-500 text-glow">Level Design Workflow</span>
+        </h1>
+        
+        <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+          Upload your level screenshots or gameplay footage. Our AI transforms them into professional portfolio breakdowns, flow diagrams, and pacing analysis in seconds.
+        </p>
+
+        <GlassCard className="relative overflow-hidden w-full max-w-2xl border-amber-500/10 bg-black/40">
           {/* Gradient border effect */}
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 opacity-75 blur-xl"></div>
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-white/5 to-transparent opacity-50 pointer-events-none"></div>
           
-          <div className="relative p-8 text-center backdrop-blur-xl bg-black/40" onDragOver={handleDragOver} onDrop={handleDrop}>
-            {/* Analysis Mode Toggle with smooth animation */}
-            <div className="mb-8 mx-auto p-1 bg-black/50 backdrop-blur-md rounded-2xl flex w-fit border border-white/20 shadow-lg">
+          <div className="relative p-8 flex flex-col items-center" onDragOver={handleDragOver} onDrop={handleDrop}>
+            
+            {/* Analysis Mode Toggle */}
+            <div className="mb-8 p-1.5 bg-black/60 backdrop-blur-md rounded-full flex w-fit border border-white/10 shadow-inner">
               <button 
                 onClick={() => setAnalysisMode('document')} 
-                className={`px-8 py-3 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 ${
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${
                   isDocumentMode 
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_20px_rgba(6,182,212,0.5)]' 
-                    : 'text-gray-400 hover:text-white'
+                    ? 'bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)] border border-white/10' 
+                    : 'text-gray-500 hover:text-gray-300'
                 }`}
               >
-                <div className="flex items-center gap-2">
-                  <Icon name="upload" className="w-4 h-4" />
-                  Image Analysis
-                </div>
+                <Icon name="upload" className="w-4 h-4" />
+                Image Analysis
               </button>
               <button 
                 onClick={() => setAnalysisMode('video')} 
-                className={`px-8 py-3 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 ${
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${
                   !isDocumentMode 
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-[0_0_20px_rgba(168,85,247,0.5)]' 
-                    : 'text-gray-400 hover:text-white'
+                    ? 'bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)] border border-white/10' 
+                    : 'text-gray-500 hover:text-gray-300'
                 }`}
               >
-                <div className="flex items-center gap-2">
-                  <Icon name="video" className="w-4 h-4" />
-                  Video Timeline
-                </div>
+                <Icon name="video" className="w-4 h-4" />
+                Video Timeline
               </button>
             </div>
 
             {/* Sub-mode Toggle for Documents */}
             {isDocumentMode && (
-              <div className="mb-8 mx-auto p-1 bg-black/50 backdrop-blur-md rounded-2xl flex w-fit border border-white/20 shadow-lg transform scale-90">
-                  <button onClick={() => setMode('single')} className={`px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 ${mode === 'single' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-[0_0_10px_rgba(6,182,212,0.3)]' : 'text-gray-400 hover:text-white'}`}>
-                      Single Analysis
-                  </button>
-                  <button onClick={() => setMode('compare')} className={`px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 ${mode === 'compare' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/50 shadow-[0_0_10px_rgba(168,85,247,0.3)]' : 'text-gray-400 hover:text-white'}`}>
-                      Compare Levels
-                  </button>
+              <div className="mb-6 flex space-x-4 text-sm">
+                  <label className="flex items-center cursor-pointer group">
+                      <input type="radio" checked={mode === 'single'} onChange={() => setMode('single')} className="hidden" />
+                      <span className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 transition-colors ${mode === 'single' ? 'border-amber-500' : 'border-gray-600 group-hover:border-gray-500'}`}>
+                          {mode === 'single' && <span className="w-2 h-2 rounded-full bg-amber-500"></span>}
+                      </span>
+                      <span className={`${mode === 'single' ? 'text-white' : 'text-gray-500 group-hover:text-gray-400'}`}>Single Analysis</span>
+                  </label>
+                  <label className="flex items-center cursor-pointer group">
+                      <input type="radio" checked={mode === 'compare'} onChange={() => setMode('compare')} className="hidden" />
+                      <span className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 transition-colors ${mode === 'compare' ? 'border-amber-500' : 'border-gray-600 group-hover:border-gray-500'}`}>
+                          {mode === 'compare' && <span className="w-2 h-2 rounded-full bg-amber-500"></span>}
+                      </span>
+                      <span className={`${mode === 'compare' ? 'text-white' : 'text-gray-500 group-hover:text-gray-400'}`}>Compare Levels</span>
+                  </label>
               </div>
             )}
 
-            {/* Animated icon with glow */}
-            <div className="flex justify-center items-center mb-8 group">
-              <div className="relative cursor-pointer" onClick={handleFileSelect}>
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full blur-2xl opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
-                <div className="relative p-6 bg-gray-900/80 backdrop-blur-md rounded-full border-2 border-cyan-400/50 shadow-[0_0_30px_rgba(6,182,212,0.3)] group-hover:border-cyan-400 group-hover:shadow-[0_0_50px_rgba(6,182,212,0.5)] transition-all duration-300 group-hover:scale-110">
-                  <Icon 
-                    name={isDocumentMode ? (mode === 'compare' ? 'compare' : 'upload') : 'video'} 
-                    className="w-12 h-12 text-cyan-300 group-hover:scale-110 transition-transform duration-300" 
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Title with gradient text */}
-            <h2 className="text-4xl font-black mb-3 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 animate-gradient">
-              {isDocumentMode 
-                ? (mode === 'compare' ? 'Compare Multiple Levels' : 'Analyze Your Level Design') 
-                : 'Video Timeline Analysis'
-              }
-            </h2>
-            
-            <p className="text-gray-300 mb-8 text-lg max-w-md mx-auto">
-              AI-powered insights in seconds. Upload your work and let our engine transform it into professional portfolio material.
-            </p>
+            {/* Main Action Area */}
+            {files.length > 0 ? (
+                  <div className="space-y-4 w-full max-w-md mx-auto mb-6">
+                    {files.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between text-white font-medium text-sm bg-white/5 border border-white/10 px-4 py-3 rounded-xl backdrop-blur-sm animate-fade-in hover:bg-white/10 transition-colors">
+                        <p className="truncate w-10/12 text-left flex items-center gap-3">
+                          <div className="p-1.5 bg-amber-500/20 rounded-lg">
+                             <Icon name={file.type.includes('video') ? 'video' : 'upload'} className="w-4 h-4 text-amber-400" />
+                          </div>
+                          {file.name}
+                        </p>
+                        <button onClick={() => removeFile(index)} className="text-gray-500 hover:text-red-400 p-1 hover:bg-white/5 rounded transition-colors">&times;</button>
+                      </div>
+                    ))}
+                    
+                    <div className="flex justify-center">
+                        <button onClick={handleFileSelect} className="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1">
+                            <Icon name="plus" className="w-3 h-3" /> Add another file
+                        </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div 
+                      onClick={handleFileSelect}
+                      className="w-full border-2 border-dashed border-white/10 rounded-2xl p-10 hover:border-amber-500/30 hover:bg-amber-500/5 transition-all cursor-pointer group max-w-md mx-auto mb-6 flex flex-col items-center"
+                  >
+                      <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 border border-white/5 group-hover:border-amber-500/20">
+                          <Icon name="upload" className="w-8 h-8 text-gray-500 group-hover:text-amber-400 transition-colors" />
+                      </div>
+                      <p className="text-gray-300 font-medium mb-1 group-hover:text-white transition-colors">
+                          Click to upload or drag & drop
+                      </p>
+                      <p className="text-gray-500 text-sm">
+                          {isDocumentMode ? "Images, PDF, or Video (MP4)" : "Video (MP4, MOV)"}
+                      </p>
+                  </div>
+            )}
 
             {/* Hidden Input */}
             <input
@@ -156,105 +183,47 @@ export const UploadForm: React.FC<UploadFormProps> = ({
               multiple={isDocumentMode && mode === 'compare'}
             />
             
-            {/* File List & Actions */}
-            <div className="space-y-6">
-              {/* Drag & Drop Area Placeholder or File List */}
-              {files.length > 0 ? (
-                  <div className="space-y-2 w-full max-w-md mx-auto">
-                    {files.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between text-white font-medium text-sm bg-white/10 border border-white/10 px-4 py-3 rounded-xl backdrop-blur-sm animate-fade-in">
-                        <p className="truncate w-10/12 text-left flex items-center gap-2">
-                          <Icon name="upload" className="w-4 h-4 text-cyan-400" />
-                          {file.name}
-                        </p>
-                        <button onClick={() => removeFile(index)} className="text-red-400 hover:text-red-300 p-1 hover:bg-white/10 rounded transition-colors">&times;</button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div 
-                      onClick={handleFileSelect}
-                      className="border-2 border-dashed border-white/10 rounded-2xl p-6 hover:border-cyan-400/50 hover:bg-cyan-400/5 transition-all cursor-pointer group max-w-md mx-auto"
-                  >
-                      <p className="text-gray-400 group-hover:text-cyan-300 transition-colors text-sm">
-                          Drag & drop files here, or click to browse
-                      </p>
-                  </div>
-                )}
-
+            {/* Controls & Submit */}
+            <div className="w-full max-w-md mx-auto space-y-4">
               {isDocumentMode && mode === 'single' && files.length > 0 && (
-                  <div className="max-w-xs mx-auto">
+                  <div className="w-full">
                       <GenreSelector selectedGenre={genre} onSelectGenre={setGenre} />
                   </div>
               )}
               
-              <div className="w-full max-w-md mx-auto">
-                <Button 
-                  onClick={onProcess}
-                  disabled={!canProcess}
-                  variant="primary"
-                  fullWidth
-                  size="lg"
-                  className="hover:shadow-[0_0_30px_rgba(6,182,212,0.6)]"
-                >
-                  {isDocumentMode 
-                    ? (mode === 'compare' ? `Forge Comparison (${files.length}/${maxFiles})` : 'Forge Portfolio')
-                    : `Analyze Timeline (${files.length}/1)`
-                  }
-                </Button>
-              </div>
+              <Button 
+                onClick={onProcess}
+                disabled={!canProcess}
+                variant="primary"
+                fullWidth
+                size="lg"
+                className="shadow-amber-900/20"
+              >
+                {isDocumentMode 
+                  ? (mode === 'compare' ? `Compare Levels` : 'Generate Portfolio')
+                  : `Analyze Timeline`
+                }
+              </Button>
             </div>
+
           </div>
         </GlassCard>
-        
-        <style>{`
-          @keyframes blob {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(20px, -50px) scale(1.1); }
-            50% { transform: translate(-20px, 20px) scale(0.9); }
-            75% { transform: translate(50px, 50px) scale(1.05); }
-          }
-          
-          @keyframes gradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-          }
-          
-          .animate-blob {
-            animation: blob 7s infinite;
-          }
-          
-          .animation-delay-2000 {
-            animation-delay: 2s;
-          }
-          
-          .animation-delay-4000 {
-            animation-delay: 4s;
-          }
-          
-          .animate-gradient {
-            background-size: 200% 200%;
-            animation: gradient 3s ease infinite;
-          }
-          
-          @keyframes fade-in {
-              from { opacity: 0; transform: translateY(10px); }
-              to { opacity: 1; transform: translateY(0); }
-          }
-          .animate-fade-in {
-              animation: fade-in 0.3s ease-out forwards;
-          }
-        `}</style>
       </div>
 
-      {/* Animated Stats Section */}
-      <div className="w-full max-w-5xl px-4">
-         <StatsDisplay />
-      </div>
-      
-      {/* Feature Grid */}
-      <div className="w-full">
-         <FeaturesGrid />
+      {/* Stats & Features */}
+      <div className="w-full max-w-6xl px-4 space-y-20">
+         <div className="border-t border-white/5 pt-10">
+             <StatsDisplay />
+         </div>
+         
+         <div>
+            <div className="text-center mb-10">
+                <span className="text-amber-500 text-sm font-bold uppercase tracking-widest">Features</span>
+                <h2 className="text-3xl md:text-4xl font-bold text-white mt-2">Key AI Insights Driving Your Success</h2>
+                <p className="text-gray-500 mt-2">Actionable intelligence that turns complex level design data into strategic decisions.</p>
+            </div>
+            <FeaturesGrid />
+         </div>
       </div>
     </div>
   );

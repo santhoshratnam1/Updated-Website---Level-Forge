@@ -26,19 +26,22 @@ export const Button: React.FC<ButtonProps> = ({
   loading = false,
   className = ''
 }) => {
-  const baseClasses = "relative group inline-flex items-center justify-center gap-2 font-bold rounded-xl transition-all duration-300 overflow-hidden";
+  const baseClasses = "relative group inline-flex items-center justify-center gap-2 font-bold transition-all duration-300 overflow-hidden";
   
+  // Updated to rounded-full for pill shape
   const sizeClasses = {
-    sm: "px-4 py-2 text-sm",
-    md: "px-6 py-3 text-base",
-    lg: "px-8 py-4 text-lg"
+    sm: "px-5 py-2 text-sm rounded-full",
+    md: "px-8 py-3 text-base rounded-full",
+    lg: "px-10 py-4 text-lg rounded-full"
   };
   
   const variantClasses = {
-    primary: "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-lg",
-    secondary: "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-lg",
+    // Updated to Gold/Amber gradient
+    primary: "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-lg",
+    // Updated secondary to be more subtle dark/outline style common in luxury themes
+    secondary: "bg-white/10 border border-white/10 text-white hover:bg-white/20 hover:border-white/20 shadow-lg hover:scale-105 disabled:opacity-50 disabled:hover:scale-100",
     outline: "bg-transparent border border-white/20 text-white hover:bg-white/10 hover:border-white/40 disabled:opacity-50",
-    ghost: "bg-transparent text-gray-300 hover:text-white hover:bg-white/10 disabled:opacity-50"
+    ghost: "bg-transparent text-gray-400 hover:text-white hover:bg-white/5 disabled:opacity-50"
   };
 
   return (
@@ -54,9 +57,9 @@ export const Button: React.FC<ButtonProps> = ({
         ${className}
       `}
     >
-      {/* Animated background shimmer for primary/secondary */}
-      {!disabled && !loading && (variant === 'primary' || variant === 'secondary') && (
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+      {/* Animated background shimmer for primary */}
+      {!disabled && !loading && variant === 'primary' && (
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
       )}
       
       {/* Content */}
@@ -75,15 +78,9 @@ export const Button: React.FC<ButtonProps> = ({
         )}
       </span>
       
-      {/* Particle effect on hover for primary */}
+      {/* Subtle glow effect on hover for primary */}
       {!disabled && !loading && variant === 'primary' && (
-        <>
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-1 h-1 bg-white rounded-full animate-ping"></div>
-            <div className="absolute top-1/2 right-1/4 w-1 h-1 bg-white rounded-full animate-ping" style={{ animationDelay: '0.2s' }}></div>
-            <div className="absolute bottom-1/4 left-1/2 w-1 h-1 bg-white rounded-full animate-ping" style={{ animationDelay: '0.4s' }}></div>
-          </div>
-        </>
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-amber-400/20 to-orange-500/20 blur-xl"></div>
       )}
     </button>
   );
