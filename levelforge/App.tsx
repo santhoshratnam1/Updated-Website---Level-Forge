@@ -8,7 +8,6 @@ import { analyzeAndGeneratePortfolio } from './lib/ai/portfolioGenerator';
 import { analyzeAndComparePortfolios } from './lib/ai/comparisonAnalyzer';
 import { generateDesignChallenges } from './lib/ai/challengeGenerator';
 import type { Block, GeneratedAsset, ComparisonPayload, ComparisonResult, ChecklistState, DesignChallenge, VideoAnalysisResult } from './types/portfolio';
-import { Icon } from './components/Icon';
 import { processFileUpload } from './utils/fileProcessor';
 import { exportToPdf } from './utils/pdfExporter';
 import { HelpPanel } from './components/HelpPanel';
@@ -16,6 +15,8 @@ import { TimelineView } from './components/TimelineView';
 import { extractFramesFromVideo } from './utils/videoProcessor';
 import { analyzeVideoTimeline } from './lib/ai/timelineAnalyzer';
 import { analyzeVideoForLayout } from './lib/ai/videoLayoutAnalyzer';
+import { Button } from './components/Button';
+import { Header } from './components/Header';
 
 type AppMode = 'single' | 'compare';
 type AnalysisMode = 'document' | 'video';
@@ -398,7 +399,7 @@ const App: React.FC = () => {
     }
 };
 
-  const hasResult = portfolioBlocks || comparisonResult || timelineResult;
+  const hasResult = Boolean(portfolioBlocks || comparisonResult || timelineResult);
 
   return (
     <div className="min-h-screen w-full bg-[#0a0a0f] text-gray-200 overflow-hidden relative">
@@ -408,44 +409,15 @@ const App: React.FC = () => {
         <div className="absolute bottom-[-20%] left-[20%] w-[400px] h-[400px] bg-blue-600/30 rounded-full filter blur-3xl animate-blob animation-delay-4000"></div>
       </div>
 
-      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 md:p-8">
-        <header className="w-full max-w-7xl mx-auto flex justify-between items-center p-4">
-           <div className="flex items-center space-x-3">
-             <Icon name="logo" className="h-10 w-10 text-cyan-400" />
-             <h1 className="text-3xl font-bold text-white tracking-wider">LevelForge</h1>
-           </div>
-           <div className="flex items-center space-x-2">
-                <button
-                    onClick={() => setIsHelpPanelOpen(true)}
-                    className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl backdrop-blur-md hover:bg-white/20 transition-colors duration-300 flex items-center space-x-2"
-                >
-                    <Icon name="help" className="w-5 h-5" />
-                    <span>Learn More</span>
-                </button>
-               {hasResult && (
-                 <>
-                    {portfolioBlocks && (
-                        <button
-                            onClick={handleDownloadPdf}
-                            disabled={isGeneratingPdf}
-                            className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl backdrop-blur-md hover:bg-white/20 transition-colors duration-300 flex items-center space-x-2 disabled:opacity-50"
-                        >
-                            <Icon name="download" className="w-5 h-5" />
-                            <span>{isGeneratingPdf ? 'Generating...' : 'Download PDF'}</span>
-                        </button>
-                    )}
-                   <button
-                     onClick={resetState}
-                     className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl backdrop-blur-md hover:bg-white/20 transition-colors duration-300 flex items-center space-x-2"
-                   >
-                     <Icon name="plus" className="w-5 h-5" />
-                     <span>New Project</span>
-                   </button>
-                 </>
-               )}
-            </div>
-        </header>
+      <Header 
+        hasResult={hasResult}
+        onReset={resetState}
+        onDownloadPdf={handleDownloadPdf}
+        isGeneratingPdf={isGeneratingPdf}
+        onHelpClick={() => setIsHelpPanelOpen(true)}
+      />
 
+      <main className="relative z-10 pt-20 flex flex-col items-center justify-center min-h-screen p-4 md:p-8">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center flex-grow">
             <LoadingSpinner message={loadingMessage} progress={progress} />
@@ -454,10 +426,10 @@ const App: React.FC = () => {
            <div className="flex flex-col items-center justify-center flex-grow text-center">
             <div className="p-8 bg-red-500/10 border border-red-500/30 rounded-2xl max-w-md">
               <h2 className="text-xl font-semibold text-red-400 mb-2">An Error Occurred</h2>
-              <p className="text-red-300 text-sm">{error}</p>
-              <button onClick={resetState} className="mt-6 px-4 py-2 bg-red-500/20 border border-red-500/40 rounded-xl hover:bg-red-500/30 transition-colors duration-300">
+              <p className="text-red-300 text-sm mb-6">{error}</p>
+              <Button onClick={resetState} variant="secondary">
                 Try Again
-              </button>
+              </Button>
             </div>
            </div>
         ) : portfolioBlocks ? (
