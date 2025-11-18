@@ -223,6 +223,7 @@ export interface ExtractedFrame {
 
 export type TimelineEventType = 
     | 'Combat' 
+    | 'Boss_Fight'
     | 'Exploration' 
     | 'Puzzle' 
     | 'Narrative' 
@@ -230,6 +231,7 @@ export type TimelineEventType =
     | 'Key_Moment' 
     | 'Stealth'
     | 'Traversal'
+    | 'Backtracking'
     | 'Looting'
     | 'Menu_UI'
     | 'Death';
@@ -242,10 +244,19 @@ export interface TimelineEvent {
   intensity: number; // 0-10, for pacing curve
 }
 
+export interface PacingBreakdown {
+    combat: number; // percentage 0-100
+    exploration: number;
+    puzzle: number;
+    narrative: number;
+    idle: number;
+}
+
 export interface PacingAnalysis {
     score: number; // 1-10
     critique: string;
     improvements: string[];
+    breakdown?: PacingBreakdown;
 }
 
 export interface VideoAnalysisResult {

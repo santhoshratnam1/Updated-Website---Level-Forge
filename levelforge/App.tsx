@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { UploadForm } from './components/UploadForm';
 import { EditorWorkspace, type EditorWorkspaceHandle } from './components/EditorWorkspace';
 import { ComparisonView } from './components/ComparisonView';
@@ -52,6 +52,15 @@ const App: React.FC = () => {
 
   const editorRef = useRef<EditorWorkspaceHandle>(null);
 
+  // Cleanup video URL on unmount or when it changes
+  useEffect(() => {
+    return () => {
+      if (videoUrl) {
+        URL.revokeObjectURL(videoUrl);
+      }
+    };
+  }, [videoUrl]);
+
   const resetState = () => {
     setMode('single');
     setAnalysisMode('document');
@@ -69,6 +78,7 @@ const App: React.FC = () => {
     setGenre('general');
     setAnalysisJson(null);
     setIsGeneratingAsset(false);
+    
     if(videoUrl) {
       URL.revokeObjectURL(videoUrl);
       setVideoUrl('');
@@ -342,6 +352,12 @@ const App: React.FC = () => {
   };
 
   const handleGenerateNewAsset = async (assetType: 'Top-down whitebox map' | 'Player flow diagram' | 'Combat analysis overlay' | 'Flow & Loops Overlay') => {
+    // Prevent concurrent generation
+    if (isGeneratingAsset) {
+      console.warn('Asset generation already in progress');
+      return;
+    }
+
     if (!analysisJson) {
         setError("Cannot generate asset: analysis data is missing.");
         return;

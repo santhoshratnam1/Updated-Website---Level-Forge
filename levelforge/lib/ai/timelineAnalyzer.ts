@@ -14,9 +14,20 @@ const timelineAnalysisSchema = {
             properties: {
                 score: { type: Type.INTEGER, description: "Overall pacing score from 1 (poor/boring) to 10 (perfect flow)." },
                 critique: { type: Type.STRING, description: "Detailed critique of the level's pacing. Discuss rhythm, tension, and downtime." },
-                improvements: { type: Type.ARRAY, items: { type: Type.STRING }, description: "Specific, actionable suggestions to improve flow and pacing." }
+                improvements: { type: Type.ARRAY, items: { type: Type.STRING }, description: "Specific, actionable suggestions to improve flow and pacing." },
+                breakdown: {
+                    type: Type.OBJECT,
+                    properties: {
+                        combat: { type: Type.INTEGER, description: "Estimated percentage of playtime spent in combat/action (0-100)." },
+                        exploration: { type: Type.INTEGER, description: "Estimated percentage of playtime spent navigating/exploring (0-100)." },
+                        puzzle: { type: Type.INTEGER, description: "Estimated percentage of time spent solving puzzles (0-100)." },
+                        narrative: { type: Type.INTEGER, description: "Estimated percentage of time in dialogue/cutscenes (0-100)." },
+                        idle: { type: Type.INTEGER, description: "Estimated percentage of time in menus, inventory, or AFK (0-100)." }
+                    },
+                    required: ['combat', 'exploration', 'puzzle', 'narrative', 'idle']
+                }
             },
-            required: ['score', 'critique', 'improvements']
+            required: ['score', 'critique', 'improvements', 'breakdown']
         },
         events: {
             type: Type.ARRAY,
@@ -26,7 +37,11 @@ const timelineAnalysisSchema = {
                     timestamp: { type: Type.INTEGER, description: 'The timestamp (in seconds) of the frame where this event occurs.'},
                     type: { 
                         type: Type.STRING, 
-                        enum: ['Combat', 'Exploration', 'Puzzle', 'Narrative', 'Player_Stuck', 'Key_Moment', 'Stealth', 'Traversal', 'Looting', 'Menu_UI', 'Death'], 
+                        enum: [
+                            'Combat', 'Boss_Fight', 'Exploration', 'Puzzle', 'Narrative', 
+                            'Player_Stuck', 'Key_Moment', 'Stealth', 'Traversal', 
+                            'Backtracking', 'Looting', 'Menu_UI', 'Death'
+                        ], 
                         description: 'The category of the event.'
                     },
                     title: { type: Type.STRING, description: 'A short, concise title for the event (3-5 words).'},
@@ -48,18 +63,22 @@ export async function analyzeVideoTimeline(frames: ExtractedFrame[]): Promise<{ 
     Your task is to analyze this sequence to understand the player's journey and the level's pacing.
     
     Analyze the frames to identify events granularly. Look for:
-    - Combat: Starts/ends of fights.
-    - Exploration: Walking through new areas.
+    - Combat: Standard fights.
+    - Boss_Fight: Major encounters with boss-level enemies.
+    - Exploration: Walking through new areas, looking around.
     - Traversal: Specific platforming or movement challenges.
+    - Backtracking: Moving through previously visited areas.
     - Looting: Picking up items or opening chests.
-    - Player_Stuck: Wandering, backtracking confusedly, or failing repeatedly.
+    - Player_Stuck: Wandering confusedly or failing repeatedly.
     - Menu_UI: Spending time in menus/inventory.
     - Death: Player dying and respawning.
     - Key_Moment: Major discoveries or setpieces.
-    - Narrative: Cutscenes or dialogue.
+    - Narrative: Cutscenes, dialogue, or reading lore.
+    - Stealth: Sneaking or avoiding detection.
     
     Based on your analysis, generate a timeline of events and a detailed PACING ANALYSIS.
-    Evaluate the rhythm of the level. Is there too much downtime? Is the combat too chaotic? 
+    Evaluate the rhythm of the level. Is there too much downtime? Is the combat too chaotic?
+    Estimate the percentage breakdown of playtime (combat vs exploration, etc.).
     
     For each event, provide an intensity score from 0 (calm) to 10 (peak tension).
     The timestamp for each event MUST correspond to one of the provided frame timestamps.
