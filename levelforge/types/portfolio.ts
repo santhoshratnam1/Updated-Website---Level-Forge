@@ -181,3 +181,78 @@ export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
 }
+
+// ============================================
+// Design Checklist Types
+// ============================================
+
+export interface ChecklistItem {
+  id: string;
+  label: string;
+}
+
+export interface ChecklistCategory {
+  title: string;
+  items: ChecklistItem[];
+}
+
+export type ChecklistState = Record<string, boolean>;
+
+// ============================================
+// Design Challenge Types
+// ============================================
+
+export type ChallengeStatus = 'suggested' | 'accepted' | 'completed';
+
+export interface DesignChallenge {
+  id: string;
+  title: string;
+  description: string;
+  category: 'Navigation' | 'Pacing' | 'Combat' | 'Atmosphere' | 'General';
+  status: ChallengeStatus;
+}
+
+// ============================================
+// Video Timeline Analysis Types
+// ============================================
+
+export interface ExtractedFrame {
+  timestamp: number; // in seconds
+  base64: string; // raw base64 data
+}
+
+export type TimelineEventType = 
+    | 'Combat' 
+    | 'Exploration' 
+    | 'Puzzle' 
+    | 'Narrative' 
+    | 'Player_Stuck' 
+    | 'Key_Moment' 
+    | 'Stealth'
+    | 'Traversal'
+    | 'Looting'
+    | 'Menu_UI'
+    | 'Death';
+
+export interface TimelineEvent {
+  timestamp: number; // in seconds
+  type: TimelineEventType;
+  title: string;
+  description: string;
+  intensity: number; // 0-10, for pacing curve
+}
+
+export interface PacingAnalysis {
+    score: number; // 1-10
+    critique: string;
+    improvements: string[];
+}
+
+export interface VideoAnalysisResult {
+  summary: string; // High-level summary of the player's journey
+  pacing: PacingAnalysis;
+  events: TimelineEvent[];
+  frames: ExtractedFrame[]; // The frames that were sent for analysis
+  generatedAssets: GeneratedAsset[]; // Visual assets generated from video
+  videoUrl: string; // Object URL for the video player
+}

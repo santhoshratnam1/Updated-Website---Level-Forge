@@ -2,18 +2,27 @@ import React, { useState, useImperativeHandle, forwardRef, useRef } from 'react'
 import { GlassCard } from './GlassCard';
 import { PortfolioBuilder } from './editor/PortfolioBuilder';
 import { AnnotationCanvas, type AnnotationCanvasHandle } from './editor/AnnotationCanvas';
-import type { Block, GeneratedAsset, Annotation } from '../types/portfolio';
+import type { Block, GeneratedAsset, Annotation, ChecklistState, DesignChallenge } from '../types/portfolio';
 import { useAnnotations } from '../hooks/useAnnotations';
 import { Icon, type IconName } from './Icon';
 import { ChatAssistant } from './ChatAssistant';
+import { DesignChecklist } from './DesignChecklist';
+import { useChecklist } from '../hooks/useChecklist';
+import { DesignChallenges } from './DesignChallenges';
+import { useChallenges } from '../hooks/useChallenges';
+import { LoadingSpinner } from './LoadingSpinner';
 
 interface EditorWorkspaceProps {
   initialBlocks: Block[];
   generatedImages: GeneratedAsset[];
+  initialChallenges: DesignChallenge[] | null;
+  onGenerateAsset: (assetType: 'Top-down whitebox map' | 'Player flow diagram' | 'Combat analysis overlay' | 'Flow & Loops Overlay') => void;
+  isGeneratingAsset: boolean;
 }
 
 export interface EditorWorkspaceHandle {
     getAnnotatedImages: () => Promise<GeneratedAsset[]>;
+    getChecklistState: () => ChecklistState;
 }
 
 const AnnotationToolbar: React.FC<{
@@ -30,27 +39,32 @@ const AnnotationToolbar: React.FC<{
                     <button 
                         key={tool} 
                         onClick={() => setActiveTool(tool)}
-                        className={`p-2 rounded-lg transition-colors ${activeTool === tool ? 'bg-[var(--accent-primary)]/50' : 'hover:bg-[var(--surface-secondary)]'}`} 
+                        className={`p-2 rounded-lg transition-colors ${activeTool === tool ? 'bg-cyan-500/50' : 'hover:bg-white/20'}`} 
                         aria-label={`${tool} tool`}
                     >
-                        <Icon name={tool} className="w-6 h-6 text-[var(--text-secondary)]" />
+                        <Icon name={tool} className="w-6 h-6 text-gray-300" />
                     </button>
                 ))}
-                <div className="h-6 w-px bg-[var(--border-primary)] mx-2" />
-                <button onClick={undo} className="p-2 rounded-lg hover:bg-[var(--surface-secondary)]" aria-label="Undo">
-                   <Icon name="undo" className="w-6 h-6 text-[var(--text-secondary)]" />
+                <div className="h-6 w-px bg-white/20 mx-2" />
+                <button onClick={undo} className="p-2 rounded-lg hover:bg-white/20" aria-label="Undo">
+                   <Icon name="undo" className="w-6 h-6 text-gray-300" />
                 </button>
-                 <button onClick={clear} className="p-2 rounded-lg hover:bg-[var(--surface-secondary)]" aria-label="Clear Annotations">
-                   <Icon name="trash" className="w-6 h-6 text-[var(--text-secondary)]" />
+                 <button onClick={clear} className="p-2 rounded-lg hover:bg-white/20" aria-label="Clear Annotations">
+                   <Icon name="trash" className="w-6 h-6 text-gray-300" />
                 </button>
             </div>
         </GlassCard>
     );
 };
 
-export const EditorWorkspace = forwardRef<EditorWorkspaceHandle, EditorWorkspaceProps>(({ initialBlocks, generatedImages }, ref) => {
-  const [activeTab, setActiveTab] = useState(0);
+type LeftPanelTab = 'portfolio' | 'checklist' | 'challenges';
+
+export const EditorWorkspace = forwardRef<EditorWorkspaceHandle, EditorWorkspaceProps>(({ initialBlocks, generatedImages, initialChallenges, onGenerateAsset, isGeneratingAsset }, ref) => {
+  const [activeImageTab, setActiveImageTab] = useState(0);
+  const [leftPanelTab, setLeftPanelTab] = useState<LeftPanelTab>('portfolio');
   const { annotations, addAnnotation, undoAnnotation, clearAnnotations, activeTool, setActiveTool } = useAnnotations();
+  const { checklistState, toggleItem, completionPercentage } = useChecklist();
+  const { challenges, updateChallengeStatus } = useChallenges(initialChallenges || []);
   const canvasRefs = useRef<{[key: number]: AnnotationCanvasHandle | null}>({});
 
   useImperativeHandle(ref, () => ({
@@ -69,21 +83,61 @@ export const EditorWorkspace = forwardRef<EditorWorkspaceHandle, EditorWorkspace
             }
         }
         return annotatedImages;
+    },
+    getChecklistState() {
+        return checklistState;
     }
   }));
 
   const handleSetAnnotations = (newAnnotations: Annotation[]) => {
-      addAnnotation(activeTab, newAnnotations);
+      addAnnotation(activeImageTab, newAnnotations);
   };
+
+  const TabButton: React.FC<{ tabId: LeftPanelTab; label: string; }> = ({ tabId, label }) => (
+    <button
+        onClick={() => setLeftPanelTab(tabId)}
+        className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex-shrink-0 ${
+            leftPanelTab === tabId ? 'bg-cyan-500/30 text-cyan-200' : 'text-gray-400 hover:bg-white/10'
+        }`}
+    >
+        {label}
+    </button>
+  );
   
   return (
     <div className="w-full h-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 p-4 flex-grow">
       {/* Left Side: Portfolio Builder */}
-      <div className="h-[80vh] overflow-y-auto pr-2 custom-scrollbar">
-        <PortfolioBuilder 
-          initialBlocks={initialBlocks} 
-          onSave={(blocks) => console.log('Saving blocks:', blocks)}
-        />
+      <div className="h-[80vh] flex flex-col">
+        <div className="flex-shrink-0 mb-4">
+            <GlassCard>
+                <div className="p-2 flex space-x-2">
+                    <TabButton tabId="portfolio" label="Portfolio" />
+                    <TabButton tabId="checklist" label="Checklist" />
+                    <TabButton tabId="challenges" label="Challenges" />
+                </div>
+            </GlassCard>
+        </div>
+        <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
+            {leftPanelTab === 'portfolio' && (
+                <PortfolioBuilder 
+                  initialBlocks={initialBlocks} 
+                  onSave={(blocks) => console.log('Saving blocks:', blocks)}
+                />
+            )}
+            {leftPanelTab === 'checklist' && (
+                <DesignChecklist 
+                    checklistState={checklistState}
+                    toggleItem={toggleItem}
+                    completionPercentage={completionPercentage}
+                />
+            )}
+            {leftPanelTab === 'challenges' && (
+                <DesignChallenges
+                    challenges={challenges}
+                    onStatusChange={updateChallengeStatus}
+                />
+            )}
+        </div>
       </div>
 
       {/* Right Side: Visuals */}
@@ -92,20 +146,31 @@ export const EditorWorkspace = forwardRef<EditorWorkspaceHandle, EditorWorkspace
           <AnnotationToolbar 
             activeTool={activeTool}
             setActiveTool={setActiveTool}
-            undo={() => undoAnnotation(activeTab)}
-            clear={() => clearAnnotations(activeTab)}
+            undo={() => undoAnnotation(activeImageTab)}
+            clear={() => clearAnnotations(activeImageTab)}
           />
         </div>
         <div className="flex-grow flex flex-col">
             <GlassCard className="flex-grow flex flex-col">
-                <div className="p-4 border-b border-[var(--border-primary)]">
+                <div className="p-4 border-b border-white/10">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="font-semibold text-lg text-white">Visual Assets</h3>
+                        <button
+                            onClick={() => onGenerateAsset('Combat analysis overlay')}
+                            disabled={isGeneratingAsset}
+                            className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-xl text-sm backdrop-blur-md hover:bg-white/20 transition-colors duration-300 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-wait"
+                        >
+                            <Icon name="logo" className={`w-4 h-4 ${isGeneratingAsset ? 'animate-spin' : ''}`} />
+                            <span>{isGeneratingAsset ? 'Generating...' : 'Generate Combat Overlay'}</span>
+                        </button>
+                    </div>
                     <div className="flex space-x-2 overflow-x-auto pb-2">
                         {generatedImages.map((image, index) => (
                         <button
                             key={index}
-                            onClick={() => setActiveTab(index)}
+                            onClick={() => setActiveImageTab(index)}
                             className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex-shrink-0 ${
-                            activeTab === index ? 'bg-[var(--accent-primary)]/30 text-[var(--accent-text)]' : 'text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)]'
+                            activeImageTab === index ? 'bg-cyan-500/30 text-cyan-200' : 'text-gray-400 hover:bg-white/10'
                             }`}
                         >
                             {image.title}
@@ -114,13 +179,17 @@ export const EditorWorkspace = forwardRef<EditorWorkspaceHandle, EditorWorkspace
                     </div>
                 </div>
                 <div className="flex-grow p-4 flex flex-col items-center justify-center min-h-0 relative">
-                    {generatedImages[activeTab] && (
+                    {isGeneratingAsset && (
+                        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-10 flex flex-col items-center justify-center">
+                            <LoadingSpinner message="Generating combat overlay..." />
+                        </div>
+                    )}
+                    {generatedImages[activeImageTab] && (
                         <AnnotationCanvas
-                            // FIX: Corrected ref assignment in callback to prevent returning a value, which is invalid for a ref callback.
-                            ref={el => { canvasRefs.current[activeTab] = el; }}
-                            imageUrl={generatedImages[activeTab].url}
+                            ref={el => { canvasRefs.current[activeImageTab] = el; }}
+                            imageUrl={generatedImages[activeImageTab].url}
                             activeTool={activeTool}
-                            annotations={annotations[activeTab] || []}
+                            annotations={annotations[activeImageTab] || []}
                             onAnnotationsChange={handleSetAnnotations}
                         />
                     )}

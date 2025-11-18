@@ -2,18 +2,25 @@ import { GoogleGenAI, Modality } from "@google/genai";
 import { withTimeout } from '../utils/timeout';
 import { genres } from '../lib/ai/genreTemplates';
 
-// More robust validation
-if (!process.env.API_KEY) {
-  const errorMsg = 'API_KEY environment variable not set. Please ensure it is configured correctly.';
-  console.error(errorMsg);
-  throw new Error(errorMsg);
+// Lazily initialized AI instance
+let ai: GoogleGenAI | undefined;
+
+export function getAiInstance(): GoogleGenAI {
+  if (!ai) {
+    if (!process.env.API_KEY) {
+      const errorMsg = 'API_KEY environment variable not set. Please ensure it is configured correctly.';
+      console.error(errorMsg);
+      // This will be caught by the calling function and can be displayed to the user gracefully.
+      throw new Error(errorMsg);
+    }
+    if (process.env.API_KEY.length < 20) {
+      console.warn('API key seems unusually short. Please verify it is correct.');
+    }
+    ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  }
+  return ai;
 }
 
-if (process.env.API_KEY.length < 20) {
-  console.warn('API key seems unusually short. Please verify it is correct.');
-}
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 // Utility: Retry with exponential backoff
 async function retryWithBackoff<T>(
@@ -41,13 +48,8 @@ async function retryWithBackoff<T>(
   throw lastError!;
 }
 
-type VisualInput = 
-  | { images: { imageData: string; mimeType: string }[] }
-  | { analysisData: any };
-
-
 export const generateVisualAsset = async (
-  input: VisualInput,
+  input: { base64Data: string; mimeType: string } | { analysisData: any },
   assetType: 'Top-down whitebox map' | 'Player flow diagram' | 'Combat analysis overlay' | 'Flow & Loops Overlay',
   genre: string
 ): Promise<string> => {
@@ -59,20 +61,18 @@ export const generateVisualAsset = async (
   let prompt: string;
   let contents: { parts: ({ text: string } | { inlineData: { data: string; mimeType: string } })[] };
 
-  if ('images' in input && input.images.length > 0) {
-    const imageParts = input.images.map(img => ({
-      inlineData: { data: img.imageData, mimeType: img.mimeType }
-    }));
-    prompt = `From these ${input.images.length} screenshots of the same level, ${template.visualPrompts.image[assetType]}`;
+  if ('base64Data' in input) {
+    prompt = template.visualPrompts.image[assetType];
     contents = {
-      parts: [ ...imageParts, { text: prompt } ],
+      parts: [
+        { inlineData: { data: input.base64Data, mimeType: input.mimeType } },
+        { text: prompt },
+      ],
     };
-  } else if ('analysisData' in input) {
+  } else {
     const analysisText = `Here is a JSON representation of a level design analysis:\n\n${JSON.stringify(input.analysisData, null, 2)}`;
     prompt = `${template.visualPrompts.text[assetType]}\n\n${analysisText}`;
     contents = { parts: [{ text: prompt }] };
-  } else {
-    throw new Error("Invalid input for generateVisualAsset. Provide either images or analysis data.");
   }
   
   try {
@@ -80,6 +80,7 @@ export const generateVisualAsset = async (
       retryWithBackoff(async () => {
         console.log(`Making API call for ${assetType}...`);
         
+        const ai = getAiInstance();
         const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash-image',
           contents: contents,
