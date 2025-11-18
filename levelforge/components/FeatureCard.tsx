@@ -20,7 +20,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
   return (
     <GlassCard 
       hover3d 
-      className="p-8 cursor-pointer group h-full bg-white/[0.02] border-white/5 hover:border-amber-500/30"
+      className="p-8 cursor-pointer group h-full bg-[#0a0a0a] border-white/5 hover:border-amber-500/30 transition-all duration-300"
       style={{
         animationDelay: `${index * 100}ms`
       }}
@@ -28,20 +28,20 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
       {/* Icon with gradient background */}
       <div className="relative mb-6 w-fit">
         {/* Glow effect */}
-        <div className={`absolute inset-0 bg-gradient-to-r ${gradient} rounded-full blur-xl opacity-20 group-hover:opacity-50 transition-opacity duration-300`}></div>
+        <div className={`absolute inset-0 bg-gradient-to-r ${gradient} rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500`}></div>
         
         {/* Icon container */}
-        <div className={`relative p-3 rounded-full bg-gradient-to-br from-white/10 to-white/5 border border-white/10 group-hover:scale-110 group-hover:border-amber-500/50 transition-all duration-300`}>
-          <Icon name={icon} className="w-6 h-6 text-amber-400" />
+        <div className={`relative p-4 rounded-2xl bg-white/5 border border-white/10 group-hover:border-amber-500/40 transition-all duration-300`}>
+          <Icon name={icon} className="w-8 h-8 text-gray-400 group-hover:text-amber-400 transition-colors duration-300" />
         </div>
       </div>
       
       {/* Content */}
-      <h3 className="text-lg font-bold text-white mb-3 group-hover:text-amber-400 transition-colors duration-300">
+      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-amber-400 transition-colors duration-300">
         {title}
       </h3>
       
-      <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+      <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-400 transition-colors duration-300">
         {description}
       </p>
       

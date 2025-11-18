@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { GlassCard } from './GlassCard';
 import { useAnimatedNumber } from '../hooks/useAnimatedNumber';
 
@@ -7,32 +7,47 @@ interface StatCardProps {
   value: number;
   suffix?: string;
   delay?: number;
-  gradient?: string;
 }
 
 const StatCard: React.FC<StatCardProps> = ({ 
   label, 
   value, 
   suffix = '', 
-  delay = 0,
-  gradient = 'from-amber-300 to-orange-500'
+  delay = 0
 }) => {
-  const displayValue = useAnimatedNumber(value, 2000, delay);
+  // Ensure value is at least 0 to prevent NaN issues
+  const safeValue = Math.max(0, value);
+  const displayValue = useAnimatedNumber(safeValue, 2000, delay);
+  
+  // Fallback to show the value if animation fails or takes too long (safety check)
+  const [shownValue, setShownValue] = useState(0);
+  
+  useEffect(() => {
+      setShownValue(displayValue);
+  }, [displayValue]);
+
+  // Force update to final value after delay + duration to ensure accuracy
+  useEffect(() => {
+      const timer = setTimeout(() => {
+          setShownValue(safeValue);
+      }, delay + 2100);
+      return () => clearTimeout(timer);
+  }, [safeValue, delay]);
 
   return (
-    <GlassCard hover3d className="p-6 group cursor-pointer h-full border-white/5 bg-white/[0.02]">
-      <div className="flex items-center gap-4">
-          {/* Circular Progress Placeholder */}
-          <div className="relative w-16 h-16">
+    <GlassCard hover3d className="p-6 group cursor-pointer h-full border-white/5 bg-[#0a0a0a]">
+      <div className="flex items-center gap-5">
+          {/* Circular Progress UI */}
+          <div className="relative w-16 h-16 flex-shrink-0">
                <svg className="w-full h-full transform -rotate-90">
-                   <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.05)" strokeWidth="4" fill="transparent" />
+                   <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.1)" strokeWidth="4" fill="transparent" />
                    <circle 
                       cx="32" cy="32" r="28" 
                       stroke="url(#statGradient)" 
                       strokeWidth="4" 
                       fill="transparent" 
                       strokeDasharray={175}
-                      strokeDashoffset={175 - (175 * (displayValue / value))}
+                      strokeDashoffset={175 - (175 * (Math.min(shownValue, safeValue) / (safeValue || 1)))}
                       className="transition-all duration-1000 ease-out"
                    />
                    <defs>
@@ -43,18 +58,18 @@ const StatCard: React.FC<StatCardProps> = ({
                    </defs>
                </svg>
                <div className="absolute inset-0 flex items-center justify-center">
-                   <div className="w-2 h-2 bg-amber-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
+                   <div className="w-2 h-2 bg-amber-500 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.8)] animate-pulse"></div>
                </div>
           </div>
 
           <div className="space-y-1">
             <div className="flex items-baseline gap-1">
-            <h3 className={`text-4xl font-bold text-white group-hover:text-amber-400 transition-colors duration-300`}>
-                {displayValue.toLocaleString()}
+            <h3 className={`text-4xl font-black text-white group-hover:text-amber-400 transition-colors duration-300 tracking-tight`}>
+                {shownValue.toLocaleString()}
             </h3>
-            {suffix && <span className="text-xl font-bold text-gray-500">{suffix}</span>}
+            {suffix && <span className="text-xl font-bold text-amber-600">{suffix}</span>}
             </div>
-            <p className="text-gray-500 text-xs font-medium uppercase tracking-wider">{label}</p>
+            <p className="text-gray-400 text-xs font-bold uppercase tracking-widest group-hover:text-gray-300 transition-colors">{label}</p>
           </div>
       </div>
     </GlassCard>
@@ -76,7 +91,7 @@ export const StatsDisplay: React.FC = () => {
         delay={200}
       />
       <StatCard 
-        label="Portfolio Created" 
+        label="Portfolios Created" 
         value={8450} 
         delay={400}
       />

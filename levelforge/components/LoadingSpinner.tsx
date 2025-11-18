@@ -11,9 +11,9 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message, progres
   const offset = circumference - ((progress ?? 0) / 100) * circumference;
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-6">
+    <div className="flex flex-col items-center justify-center space-y-8">
       {/* Spinner with progress */}
-      <div className="relative h-32 w-32">
+      <div className="relative h-40 w-40">
         {/* Background circle */}
         <svg className="absolute top-0 left-0 w-full h-full transform -rotate-90" viewBox="0 0 128 128">
           <circle
@@ -21,9 +21,9 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message, progres
             cy="64"
             r={radius}
             stroke="currentColor"
-            strokeWidth="8"
+            strokeWidth="6"
             fill="transparent"
-            className="text-gray-700/50"
+            className="text-white/5"
           />
           {/* Progress circle */}
           {typeof progress !== 'undefined' && (
@@ -31,35 +31,43 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message, progres
               cx="64"
               cy="64"
               r={radius}
-              stroke="currentColor"
-              strokeWidth="8"
+              stroke="url(#spinnerGradient)"
+              strokeWidth="6"
               fill="transparent"
               strokeDasharray={circumference}
               strokeDashoffset={offset}
-              className="text-cyan-400"
               strokeLinecap="round"
               style={{ transition: 'stroke-dashoffset 0.35s ease-out' }}
             />
           )}
+           <defs>
+               <linearGradient id="spinnerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                   <stop offset="0%" stopColor="#f59e0b" />
+                   <stop offset="100%" stopColor="#ea580c" />
+               </linearGradient>
+           </defs>
         </svg>
         
         {/* Spinning center */}
         <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-12 w-12 border-2 border-cyan-500/30 rounded-full animate-spin"></div>
+             <div className="relative w-16 h-16">
+                <div className="absolute inset-0 border-t-2 border-amber-500 rounded-full animate-spin"></div>
+                <div className="absolute inset-2 border-r-2 border-orange-600 rounded-full animate-spin animation-delay-200"></div>
+             </div>
         </div>
         
         {/* Progress percentage */}
         {typeof progress !== 'undefined' && (
-            <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-bold text-cyan-400">{Math.round(progress)}%</span>
+            <div className="absolute inset-0 flex items-center justify-center pt-20">
+                <span className="text-sm font-bold text-amber-500 mt-2">{Math.round(progress)}%</span>
             </div>
         )}
       </div>
 
       {/* Message */}
       {message && (
-        <div className="text-center space-y-2">
-          <p className="text-lg font-medium text-gray-200 max-w-sm">{message}</p>
+        <div className="text-center space-y-2 max-w-md animate-fade-in">
+          <p className="text-xl font-semibold text-white tracking-tight">{message}</p>
           {typeof progress !== 'undefined' && (
              <p className="text-sm text-gray-500">This may take 1-2 minutes...</p>
           )}
@@ -68,9 +76,9 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message, progres
 
       {/* Progress bar */}
       {typeof progress !== 'undefined' && (
-        <div className="w-80 h-2 bg-gray-800 rounded-full overflow-hidden">
+        <div className="w-64 h-1 bg-white/10 rounded-full overflow-hidden">
             <div 
-            className="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500"
+            className="h-full bg-gradient-to-r from-amber-500 to-orange-600"
             style={{ width: `${progress}%`, transition: 'width 0.35s ease-out' }}
             />
         </div>

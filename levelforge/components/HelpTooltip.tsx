@@ -8,24 +8,31 @@ interface HelpTooltipProps {
   className?: string;
 }
 
-export const HelpTooltip: React.FC<HelpTooltipProps> = ({ glossaryKey, children, className }) => {
+export const HelpTooltip: React.FC<HelpTooltipProps> = ({ glossaryKey, children, className = '' }) => {
   const term = glossary[glossaryKey];
   if (!term) return <>{children || null}</>;
 
-  const content = (
-    <>
-      {children}
-      <Icon name="help" className="w-4 h-4 text-cyan-400/70 inline-block ml-1" />
-    </>
-  );
-
   return (
-    <div className={`group relative inline-flex items-center ${className}`}>
-      {content}
-      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 p-3 bg-gray-900/80 backdrop-blur-md border border-white/20 rounded-xl text-sm text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
-        <h4 className="font-bold text-white mb-1">{term.name}</h4>
-        <p>{term.shortDescription}</p>
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-gray-800/80 -mb-2"></div>
+    <div className={`flex items-center gap-2 ${className}`}>
+      {children}
+      <div className="relative group flex items-center justify-center">
+         <button className="p-1 rounded-full hover:bg-white/10 text-gray-500 hover:text-amber-400 transition-colors focus:outline-none">
+            <Icon name="help" className="w-4 h-4" />
+         </button>
+         
+         {/* Tooltip Content */}
+         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-72 p-4 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none transform translate-y-2 group-hover:translate-y-0">
+            <div className="flex items-start gap-3 mb-2">
+                <div className="p-1.5 bg-amber-500/10 rounded-lg">
+                    <Icon name={term.icon} className="w-4 h-4 text-amber-500" />
+                </div>
+                <h4 className="font-bold text-white text-sm mt-0.5">{term.name}</h4>
+            </div>
+            <p className="text-xs text-gray-400 leading-relaxed">{term.shortDescription}</p>
+            
+            {/* Arrow */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#1a1a1a] border-b border-r border-white/10 transform rotate-45 translate-y-1.5"></div>
+         </div>
       </div>
     </div>
   );
