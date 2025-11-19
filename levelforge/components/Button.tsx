@@ -36,10 +36,8 @@ export const Button: React.FC<ButtonProps> = ({
   };
   
   const variantClasses = {
-    // Updated to Gold/Amber gradient
-    primary: "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-lg",
-    // Updated secondary to be more subtle dark/outline style common in luxury themes
-    secondary: "bg-white/10 border border-white/10 text-white hover:bg-white/20 hover:border-white/20 shadow-lg hover:scale-105 disabled:opacity-50 disabled:hover:scale-100",
+    primary: "bg-blue-600 hover:bg-blue-500 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-lg",
+    secondary: "glass text-white hover:bg-white/10 shadow-lg hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100",
     outline: "bg-transparent border border-white/20 text-white hover:bg-white/10 hover:border-white/40 disabled:opacity-50",
     ghost: "bg-transparent text-gray-400 hover:text-white hover:bg-white/5 disabled:opacity-50"
   };
@@ -57,12 +55,6 @@ export const Button: React.FC<ButtonProps> = ({
         ${className}
       `}
     >
-      {/* Animated background shimmer for primary */}
-      {!disabled && !loading && variant === 'primary' && (
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-      )}
-      
-      {/* Content */}
       <span className="relative flex items-center gap-2 z-10">
         {loading ? (
           <>
@@ -77,11 +69,6 @@ export const Button: React.FC<ButtonProps> = ({
           </>
         )}
       </span>
-      
-      {/* Subtle glow effect on hover for primary */}
-      {!disabled && !loading && variant === 'primary' && (
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-amber-400/20 to-orange-500/20 blur-xl"></div>
-      )}
     </button>
   );
 };

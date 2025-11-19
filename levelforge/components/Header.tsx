@@ -21,22 +21,22 @@ export const Header: React.FC<{
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled 
-          ? 'bg-[#050505]/90 backdrop-blur-xl border-b border-white/5 shadow-2xl' 
+          ? 'glass-header shadow-lg' 
           : 'bg-transparent'
       }`}
     >
-      <div className="w-full max-w-7xl mx-auto flex justify-between items-center p-4">
+      <div className="w-full max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
         {/* Logo */}
         <div className="flex items-center space-x-3 group cursor-pointer" onClick={onReset}>
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-600 rounded-full blur-lg opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
-            <div className="relative p-2 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full">
-              <Icon name="logo" className="h-6 w-6 text-white" />
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-600 rounded-2xl blur-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+            <div className="relative p-2.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-lg">
+              <Icon name="logo" className="h-5 w-5 text-white" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400">
+          <h1 className="text-xl font-semibold tracking-tight text-white">
             LevelForge
           </h1>
         </div>
@@ -46,36 +46,33 @@ export const Header: React.FC<{
           {/* Help Button */}
           <button
             onClick={onHelpClick}
-            className="group relative px-4 py-2 bg-white/5 backdrop-blur-md border border-white/10 rounded-full hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center gap-2"
+            className="group relative px-4 py-2 glass rounded-full hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
           >
-            <Icon name="help" className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform duration-300" />
-            <span className="relative text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
+            <Icon name="help" className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform duration-200" />
+            <span className="relative text-sm font-medium text-gray-200 group-hover:text-white transition-colors">
               Learn
             </span>
           </button>
           
           {hasResult && (
             <>
-              {/* Download PDF Button */}
               <button
                 onClick={onDownloadPdf}
                 disabled={isGeneratingPdf}
-                className="group relative px-5 py-2 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative px-5 py-2 glass rounded-full hover:bg-white/10 transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Icon name="download" className="w-4 h-4 text-gray-300 group-hover:text-white" />
-                <span className="text-sm font-medium text-gray-300 group-hover:text-white">
+                <Icon name="download" className="w-4 h-4 text-gray-200 group-hover:text-white" />
+                <span className="text-sm font-medium text-gray-200 group-hover:text-white">
                   {isGeneratingPdf ? 'Generating...' : 'Export PDF'}
                 </span>
               </button>
               
-              {/* New Project Button */}
               <button
                 onClick={onReset}
-                className="group relative px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] hover:scale-105 transition-all duration-300 flex items-center gap-2 overflow-hidden"
+                className="group relative px-5 py-2 bg-blue-600 hover:bg-blue-500 rounded-full transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                <Icon name="plus" className="w-4 h-4 text-white relative z-10" />
-                <span className="relative z-10 text-sm font-bold text-white">New Project</span>
+                <Icon name="plus" className="w-4 h-4 text-white" />
+                <span className="text-sm font-semibold text-white">New Project</span>
               </button>
             </>
           )}

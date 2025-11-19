@@ -42,8 +42,8 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message, progres
           )}
            <defs>
                <linearGradient id="spinnerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                   <stop offset="0%" stopColor="#f59e0b" />
-                   <stop offset="100%" stopColor="#ea580c" />
+                   <stop offset="0%" stopColor="#3b82f6" />
+                   <stop offset="100%" stopColor="#8b5cf6" />
                </linearGradient>
            </defs>
         </svg>
@@ -51,15 +51,15 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message, progres
         {/* Spinning center */}
         <div className="absolute inset-0 flex items-center justify-center">
              <div className="relative w-16 h-16">
-                <div className="absolute inset-0 border-t-2 border-amber-500 rounded-full animate-spin"></div>
-                <div className="absolute inset-2 border-r-2 border-orange-600 rounded-full animate-spin animation-delay-200"></div>
+                <div className="absolute inset-0 border-t-2 border-blue-500 rounded-full animate-spin"></div>
+                <div className="absolute inset-2 border-r-2 border-purple-600 rounded-full animate-spin animation-delay-200"></div>
              </div>
         </div>
         
         {/* Progress percentage */}
         {typeof progress !== 'undefined' && (
             <div className="absolute inset-0 flex items-center justify-center pt-20">
-                <span className="text-sm font-bold text-amber-500 mt-2">{Math.round(progress)}%</span>
+                <span className="text-sm font-bold text-blue-500 mt-2">{Math.round(progress)}%</span>
             </div>
         )}
       </div>
@@ -78,7 +78,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message, progres
       {typeof progress !== 'undefined' && (
         <div className="w-64 h-1 bg-white/10 rounded-full overflow-hidden">
             <div 
-            className="h-full bg-gradient-to-r from-amber-500 to-orange-600"
+            className="h-full bg-gradient-to-r from-blue-500 to-purple-600"
             style={{ width: `${progress}%`, transition: 'width 0.35s ease-out' }}
             />
         </div>

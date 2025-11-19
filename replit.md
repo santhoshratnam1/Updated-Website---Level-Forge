@@ -6,6 +6,15 @@ LevelForge is an AI-powered level design analysis tool that transforms game leve
 **Current State**: Fully functional and running on Replit. The app is configured to work with Replit's environment and deployment system.
 
 ## Recent Changes
+- **2024-11-19**: Apple-style glassmorphism UI redesign
+  - Complete visual redesign with Apple-inspired aesthetics
+  - Changed color scheme from amber/orange to blue/purple
+  - Enhanced glassmorphism effects throughout the app
+  - Updated typography with Apple system fonts
+  - Redesigned all components (Header, Buttons, Cards, Upload Form)
+  - Added grain texture and subtle animated gradient backgrounds
+  - Improved spacing and layout for cleaner, more minimal design
+
 - **2024-11-19**: Initial setup for Replit environment
   - Configured Vite to run on port 5000 with proper host allowance for Replit's proxy
   - Integrated GEMINI_API_KEY from Replit Secrets

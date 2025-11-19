@@ -40,18 +40,18 @@ export const GlassCard: React.FC<GlassCardProps> = ({ children, className = '', 
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`group relative bg-[#0f0f10] border border-white/5 rounded-2xl shadow-xl transition-all duration-500 ${className}`}
+      className={`group relative glass-card rounded-3xl shadow-2xl transition-all duration-500 ${className}`}
       style={{
         transform: hover3d ? `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)` : undefined,
         transition: 'transform 0.2s ease-out',
         ...style
       }}
     >
-      {/* Subtle top highlight gradient */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-50"></div>
+      {/* Subtle top highlight */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-60"></div>
       
       {/* Glow effect on hover */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
       
       {/* Content */}
       <div className="relative z-10 h-full">

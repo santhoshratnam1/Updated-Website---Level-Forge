@@ -402,12 +402,14 @@ const App: React.FC = () => {
   const hasResult = Boolean(portfolioBlocks || comparisonResult || timelineResult);
 
   return (
-    <div className="min-h-screen w-full bg-[#050505] text-gray-200 overflow-hidden relative">
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-        {/* Warm Gold/Amber Background Blobs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-orange-600/10 rounded-full filter blur-[100px] animate-blob"></div>
-        <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-amber-600/10 rounded-full filter blur-[100px] animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] bg-yellow-700/10 rounded-full filter blur-[100px] animate-blob animation-delay-4000"></div>
+    <div className="min-h-screen w-full bg-black text-white overflow-hidden relative">
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Apple-style gradient background */}
+        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-600/20 rounded-full filter blur-[120px] animate-blob"></div>
+        <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-purple-600/15 rounded-full filter blur-[120px] animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-[-20%] left-[30%] w-[600px] h-[600px] bg-indigo-600/15 rounded-full filter blur-[120px] animate-blob animation-delay-4000"></div>
+        {/* Subtle grain texture overlay */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-40"></div>
       </div>
 
       <Header 

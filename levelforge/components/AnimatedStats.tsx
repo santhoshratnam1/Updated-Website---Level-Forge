@@ -52,22 +52,22 @@ const StatCard: React.FC<StatCardProps> = ({
                    />
                    <defs>
                        <linearGradient id="statGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                           <stop offset="0%" stopColor="#f59e0b" />
-                           <stop offset="100%" stopColor="#ea580c" />
+                           <stop offset="0%" stopColor="#3b82f6" />
+                           <stop offset="100%" stopColor="#8b5cf6" />
                        </linearGradient>
                    </defs>
                </svg>
                <div className="absolute inset-0 flex items-center justify-center">
-                   <div className="w-2 h-2 bg-amber-500 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.8)] animate-pulse"></div>
+                   <div className="w-2 h-2 bg-blue-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.8)] animate-pulse"></div>
                </div>
           </div>
 
           <div className="space-y-1">
             <div className="flex items-baseline gap-1">
-            <h3 className={`text-4xl font-black text-white group-hover:text-amber-400 transition-colors duration-300 tracking-tight`}>
+            <h3 className={`text-4xl font-black text-white group-hover:text-blue-400 transition-colors duration-300 tracking-tight`}>
                 {shownValue.toLocaleString()}
             </h3>
-            {suffix && <span className="text-xl font-bold text-amber-600">{suffix}</span>}
+            {suffix && <span className="text-xl font-bold text-blue-500">{suffix}</span>}
             </div>
             <p className="text-gray-400 text-xs font-bold uppercase tracking-widest group-hover:text-gray-300 transition-colors">{label}</p>
           </div>
