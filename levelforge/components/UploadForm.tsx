@@ -140,12 +140,12 @@ export const UploadForm: React.FC<UploadFormProps> = ({
                   <div className="space-y-4 w-full max-w-md mx-auto mb-6">
                     {files.map((file, index) => (
                       <div key={index} className="flex items-center justify-between text-white font-medium text-sm bg-white/5 border border-white/10 px-4 py-3 rounded-xl backdrop-blur-sm animate-fade-in hover:bg-white/10 transition-colors">
-                        <p className="truncate w-10/12 text-left flex items-center gap-3">
-                          <div className="p-1.5 bg-amber-500/20 rounded-lg">
+                        <div className="truncate w-10/12 text-left flex items-center gap-3">
+                          <div className="p-1.5 bg-amber-500/20 rounded-lg flex-shrink-0">
                              <Icon name={file.type.includes('video') ? 'video' : 'upload'} className="w-4 h-4 text-amber-400" />
                           </div>
-                          {file.name}
-                        </p>
+                          <span className="truncate">{file.name}</span>
+                        </div>
                         <button onClick={() => removeFile(index)} className="text-gray-500 hover:text-red-400 p-1 hover:bg-white/5 rounded transition-colors">&times;</button>
                       </div>
                     ))}

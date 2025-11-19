@@ -47,11 +47,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   return (
     <div className="border border-white/10 rounded-xl overflow-hidden bg-black/20 backdrop-blur-sm hover:border-white/20 transition-colors">
-      <div className="flex items-center gap-1 p-2 border-b border-white/10 bg-white/[0.02]">
+      <div className="flex items-center gap-2 p-3 border-b border-white/10 bg-white/[0.02]">
         <ToolbarButton icon="heading2" onClick={() => applyFormat('h2')} title="Heading" />
         <ToolbarButton icon="bold" onClick={() => applyFormat('bold')} title="Bold" />
         <ToolbarButton icon="italic" onClick={() => applyFormat('italic')} title="Italic" />
-        <div className="w-px h-5 bg-white/10 mx-1" />
+        <div className="w-px h-5 bg-white/10 mx-2" />
         <ToolbarButton icon="list" onClick={() => applyFormat('list')} title="Bullet List" />
         <ToolbarButton icon="quote" onClick={() => applyFormat('quote')} title="Quote" />
       </div>

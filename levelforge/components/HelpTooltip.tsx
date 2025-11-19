@@ -13,17 +13,21 @@ export const HelpTooltip: React.FC<HelpTooltipProps> = ({ glossaryKey, children,
   if (!term) return <>{children || null}</>;
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`inline-flex items-center gap-2 ${className}`}>
       {children}
-      <div className="relative group flex items-center justify-center">
-         <button className="p-1 rounded-full hover:bg-white/10 text-gray-500 hover:text-amber-400 transition-colors focus:outline-none">
+      <div className="relative group inline-flex items-center justify-center isolate">
+         <button 
+           type="button"
+           className="p-1 rounded-full hover:bg-white/10 text-gray-500 hover:text-amber-400 transition-colors focus:outline-none"
+           aria-label={`Help: ${term.name}`}
+         >
             <Icon name="help" className="w-4 h-4" />
          </button>
          
          {/* Tooltip Content */}
-         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-72 p-4 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none transform translate-y-2 group-hover:translate-y-0">
+         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-72 p-4 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] pointer-events-none transform translate-y-2 group-hover:translate-y-0 whitespace-normal">
             <div className="flex items-start gap-3 mb-2">
-                <div className="p-1.5 bg-amber-500/10 rounded-lg">
+                <div className="p-1.5 bg-amber-500/10 rounded-lg flex-shrink-0">
                     <Icon name={term.icon} className="w-4 h-4 text-amber-500" />
                 </div>
                 <h4 className="font-bold text-white text-sm mt-0.5">{term.name}</h4>
